@@ -9,3 +9,7 @@ def create_new_product(product: CreateProduct, db: Session, owner_id: int):
   db.commit()
   db.refresh(product_object)
   return product_object
+
+def get_product_by_id(id: int, db: Session):
+  product = db.query(Product).filter(Product.id == id).first()
+  return product
