@@ -1,4 +1,7 @@
+from typing import List
+
 from db.repository.product import create_new_product
+from db.repository.product import get_all_products
 from db.repository.product import get_product_by_id
 from db.session import get_db
 from fastapi import APIRouter
@@ -8,6 +11,7 @@ from fastapi import status
 from schemas.product import CreateProduct
 from schemas.product import ViewProduct
 from sqlalchemy.orm import Session
+
 
 router = APIRouter()
 
@@ -28,3 +32,9 @@ def get_product(id: int, db: Session = Depends(get_db)):
             detail=f"Product with id {id} does not exist",
         )
     return product
+
+
+@router.get("/", response_model=List[ViewProduct])
+def get_products(db: Session = Depends(get_db)):
+    products = get_all_products(db=db)
+    return products
