@@ -19,3 +19,13 @@ def get_product_by_id(id: int, db: Session):
 def get_all_products(db: Session):
     products = db.query(Product).filter(Product.is_active == True).all()
     return products
+
+
+def update_product_by_id(id: int, product: CreateProduct, db: Session, owner_id):
+    product_object = db.query(Product).filter(Product.id == id)
+    if not product_object.first():
+        return 0
+    product.__dict__.update(owner_id=owner_id)
+    product_object.update(product.__dict__)
+    db.commit()
+    return 1

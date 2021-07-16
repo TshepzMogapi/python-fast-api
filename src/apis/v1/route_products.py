@@ -3,6 +3,7 @@ from typing import List
 from db.repository.product import create_new_product
 from db.repository.product import get_all_products
 from db.repository.product import get_product_by_id
+from db.repository.product import update_product_by_id
 from db.session import get_db
 from fastapi import APIRouter
 from fastapi import Depends
@@ -16,7 +17,7 @@ from sqlalchemy.orm import Session
 router = APIRouter()
 
 
-@router.post("/create", response_model=ViewProduct)
+@router.post("/", response_model=ViewProduct)
 def create_product(product: CreateProduct, db: Session = Depends(get_db)):
     create_user = 1
     product = create_new_product(product=product, db=db, owner_id=create_user)
@@ -38,3 +39,15 @@ def get_product(id: int, db: Session = Depends(get_db)):
 def get_products(db: Session = Depends(get_db)):
     products = get_all_products(db=db)
     return products
+
+
+@router.put("/{id}")
+def update_product(id: int, product: CreateProduct, db: Session = Depends(get_db)):
+    create_user = 1
+    response = update_product_by_id(id=id, product=product, db=db, owner_id=create_user)
+    if not response:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"product with id {id} not found",
+        )
+    return {"message": "updated"}
