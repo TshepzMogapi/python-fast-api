@@ -1,6 +1,7 @@
 from typing import List
 
 from db.repository.product import create_new_product
+from db.repository.product import delete_product_by_id
 from db.repository.product import get_all_products
 from db.repository.product import get_product_by_id
 from db.repository.product import update_product_by_id
@@ -51,3 +52,15 @@ def update_product(id: int, product: CreateProduct, db: Session = Depends(get_db
             detail=f"product with id {id} not found",
         )
     return {"message": "updated"}
+
+
+@router.delete("/{id}")
+def delete_product(id: int, db: Session = Depends(get_db)):
+    create_user = 1
+    response = delete_product_by_id(id=id, db=db, owner_id=create_user)
+    if not response:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"product with id {id} not found",
+        )
+    return {"message": "deleted"}

@@ -29,3 +29,12 @@ def update_product_by_id(id: int, product: CreateProduct, db: Session, owner_id)
     product_object.update(product.__dict__)
     db.commit()
     return 1
+
+
+def delete_product_by_id(id: int, db: Session, owner_id):
+    product_object = db.query(Product).filter(Product.id == id)
+    if not product_object.first():
+        return 0
+    product_object.delete(synchronize_session=False)
+    db.commit()
+    return 1

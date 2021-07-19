@@ -1,5 +1,7 @@
 import json
 
+from fastapi import status
+
 
 def test_create_product(client):
     data = {"title": "Pizza", "description": "tomato avocado and bacon"}
@@ -28,9 +30,17 @@ def test_get_all_products(client):
     assert response.json()[1]["title"] == "Pizza 2"
 
 
-def test_update_products_(client):
+def test_update_products(client):
     data = {"title": "Pizza", "description": "tomato avocado and bacon"}
     client.post("/products/", json.dumps(data))
     data["title"] = "New Italian Pizza"
     response = client.put("products/1", json.dumps(data))
     assert response.json()["message"] == "updated"
+
+
+def test_delete_product(client):
+    data = {"title": "Pizza", "description": "tomato avocado and bacon"}
+    client.post("/products/", json.dumps(data))
+    client.delete("/products/1")
+    response = client.get("products/1")
+    assert response.status_code == status.HTTP_404_NOT_FOUND
