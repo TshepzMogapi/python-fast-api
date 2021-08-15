@@ -1,7 +1,7 @@
 fastapi
 uvicorn
 sqlalchemy
-psycopg2
+psycopg2-binary
 python-dotenv
 pydantic[email]
 passlib[bcrypt]
@@ -10,7 +10,7 @@ requests
 seedir
 pre-commit
 
-[flake8]
-ignore = E501, W503, E203, E712
-max-line-length = 88
-exclude = .git, *migrations*
+# [flake8]
+# ignore = E501, W503, E203, E712
+# max-line-length = 88
+# exclude = .git, *migrations*
