@@ -1,16 +1,33 @@
-fastapi
-uvicorn
-sqlalchemy
-psycopg2-binary
-python-dotenv
-pydantic[email]
-passlib[bcrypt]
-pytest
-requests
-seedir
-pre-commit
-
-# [flake8]
-# ignore = E501, W503, E203, E712
-# max-line-length = 88
-# exclude = .git, *migrations*
+appdirs==1.4.4
+asgiref==3.4.0
+aspy.refactor-imports==2.2.0
+bcrypt==3.2.0
+black==21.6b0
+cached-property==1.5.2
+cffi==1.14.5
+click==8.0.1
+dnspython==2.1.0
+email-validator==1.1.3
+fastapi==0.65.2
+greenlet==1.1.0
+h11==0.12.0
+idna==3.2
+importlib-metadata==4.6.0
+mypy-extensions==0.4.3
+passlib==1.7.4
+pathspec==0.8.1
+psycopg2==2.9.1
+psycopg2-binary==2.9.1
+pycparser==2.20
+pydantic==1.8.2
+python-dotenv==0.18.0
+regex==2021.7.6
+reorder-python-imports==2.5.0
+six==1.16.0
+SQLAlchemy==1.4.20
+starlette==0.14.2
+toml==0.10.2
+typed-ast==1.4.3
+typing-extensions==3.10.0.0
+uvicorn==0.14.0
+zipp==3.4.1
