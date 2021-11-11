@@ -1,6 +1,8 @@
+import json
 from datetime import timedelta
 
 from apis.v1.route_users import create_user
+from clients.pub_sub_client import publish_message
 from core.config import settings
 from core.hashing import Hasher
 from core.security import create_token
@@ -30,13 +32,15 @@ def authenticate_email_password(email: str, password: str, db: Session):
     return user
 
 
-@router.post("/sign-up-email", response_model=ViewUser)
+@router.post("/email/sign-up", response_model=ViewUser)
 def sign_up_with_email_and_password(user: CreateUser, db: Session = Depends(get_db)):
     user = create_user(user, db=db)
+    event_data = json.dumps({"event": "sign-up", "email": user.email}).encode("utf-8")
+    publish_message(data=event_data)
     return user
 
 
-@router.post("/sign-in-email", response_model=Token)
+@router.post("/email/sign-in", response_model=Token)
 def sign_in_with_email_and_password(
     auth_data: UserEmailPasswordAuth, db: Session = Depends(get_db)
 ):
