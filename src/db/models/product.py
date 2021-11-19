@@ -14,5 +14,5 @@ class Product(Base):
     description = Column(String, nullable=False)
     date_created = Column(Date)
     is_active = Column(Boolean(), default=True)
-    owner_id = Column(Integer, ForeignKey("user.id"))
+    owner_id = Column(Integer, ForeignKey("_user.id"))
     owner = relationship("User", back_populates="products")

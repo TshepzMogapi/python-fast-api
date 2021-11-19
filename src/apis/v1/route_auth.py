@@ -15,6 +15,7 @@ from fastapi import status
 from schemas.auth import UserEmailPasswordAuth
 from schemas.token import Token
 from schemas.user import CreateUser
+from schemas.user import CreateUserMobile
 from schemas.user import ViewUser
 from sqlalchemy.orm import Session
 
@@ -35,9 +36,30 @@ def authenticate_email_password(email: str, password: str, db: Session):
 @router.post("/email/sign-up", response_model=ViewUser)
 def sign_up_with_email_and_password(user: CreateUser, db: Session = Depends(get_db)):
     user = create_user(user, db=db)
-    event_data = json.dumps({"event": "sign-up", "email": user.email}).encode("utf-8")
+    token_expires = timedelta(minutes=int(settings.TOKEN_EXPIRE_MINUTES))
+    token = create_token(data={"sub": user.email}, expires_delta=token_expires)
+    event_data = json.dumps(
+        {"event": "sign-up", "email": user.email, "token": token}
+    ).encode("utf-8")
+
     publish_message(data=event_data)
     return user
+
+
+@router.post("/mobile/sign-up")
+def sign_up_with_username_and_mobile_number(
+    user: CreateUserMobile, db: Session = Depends(get_db)
+):
+    # try:
+    #   print("\n\n\n Mobile \n\n\n")
+    # except:
+    #   raise Exception("Error")
+    return user
+
+
+@router.post("email/verify")
+def verify_email():
+    print("verify email")
 
 
 @router.post("/email/sign-in", response_model=Token)
