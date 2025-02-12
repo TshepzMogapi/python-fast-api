@@ -10,21 +10,14 @@ def create_tables():
     Base.metadata.create_all(bind=engine)
 
 
-def include_router(app):
-    app.include_router(api_router)
-
-
 def start_application():
     app = FastAPI(title=settings.PROJECT_NAME, version=settings.PROJECT_VERSION)
-    include_router(app)
-    create_tables()
+    # app.include_router(api_router)
+    
     return app
 
 
 app = start_application()
-
-
-# app = FastAPI()
 
 
 @app.get("/")
