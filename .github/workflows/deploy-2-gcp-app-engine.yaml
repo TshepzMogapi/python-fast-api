@@ -1,0 +1,50 @@
+name: Deploy to GCP App Engine
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy_apps:
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    runs-on: ubuntu-latest
+      
+    steps:
+    - name : Checkout
+      uses: actions/checkout@v3
+
+    - name: Prepare Shared ENV variables
+      run: |
+        k1="PROJECT_DESCRIPTION=${{ env.PROJECT_DESCRIPTION }}"
+        k2="POSTGRES_USER=${{ env.POSTGRES_USER }}"
+        k3="POSTGRES_PASSWORD=${{ env.POSTGRES_PASSWORD }}"
+        k4="POSTGRES_SERVER=${{ env.POSTGRES_SERVER }}"
+        k5="POSTGRES_PORT=${{ env.POSTGRES_PORT }}"
+        k6="POSTGRES_DB=${{ env.POSTGRES_DB }}"
+        k7="SECRET_KEY=${{ env.SECRET_KEY }}"
+        k8="ALGORITHM=${{ env.ALGORITHM }}"
+        k9="TOKEN_EXPIRE_MINUTES=${{ env.TOKEN_EXPIRE_MINUTES }}"
+        CONFIG_KEYS="$k1,$k2,$k3,$k4,$k5,$k6,$k7,$k8,$k9"
+        echo "CONFIG_KEYS=$k1,$k2,$k3,$k4,$k5,$k6,$k7,$k8,$k9" >> $GITHUB_ENV
+
+    - name: GCP_AUTH
+      uses: 'google-github-actions/auth@v2'
+      with:
+          credentials_json: ${{ secrets.GCLOUD_SERVICE_ACCOUNT_KEY }}
+
+    - name: Deploy Web app
+      uses: 'google-github-actions/deploy-appengine@v2'
+      with:
+        env_vars: |
+          ${{ env.CONFIG_KEYS }}
+        deliverables: web-app.yaml
+
+    - name: Deploy Notifier
+      uses: 'google-github-actions/deploy-appengine@v2'
+      with:
+        env_vars: |
+          ${{ env.CONFIG_KEYS }}
+        deliverables: notifier.yaml
